@@ -652,6 +652,13 @@ header.nav{border-bottom:none}
 .intro-stage h1,.section-head h2,.realm-text h3,.panel h2{color:var(--realm)}
 #stage0 h1,#stage3 h1{color:var(--text)}
 </style>
+<style id="navTopCss">
+.nav-mark,.nav-hrk{cursor:pointer}
+.nav-hrk{transition:text-shadow .2s ease, transform .2s ease}
+.nav-hrk:hover{text-shadow:0 0 26px rgba(205,254,5,.75);transform:translateY(-1px)}
+.nav-mark:hover{text-shadow:0 0 14px rgba(205,254,5,.7)}
+.nav-mark:focus-visible,.nav-hrk:focus-visible{outline:2px solid #CDFE05;outline-offset:6px;border-radius:4px}
+</style>
 </head>
 <body>
 
@@ -659,8 +666,8 @@ header.nav{border-bottom:none}
 
 <header class="nav">
   <div class="nav-inner">
-    <div class="nav-mark" id="navName">NAME</div>
-    <div class="nav-hrk" aria-hidden="true">HRK</div>
+    <div class="nav-mark" id="navName" role="button" tabindex="0" aria-label="Back to top" title="Back to top">NAME</div>
+    <div class="nav-hrk" role="button" tabindex="0" aria-label="Back to top" title="Back to top">HRK</div>
     <nav class="nav-tabs" id="navTabs">
       <button data-target="unreal">Unreal</button>
       <button data-target="unity">Unity</button>
@@ -1720,6 +1727,26 @@ if(!introSection.classList.contains('reduced')){
   ov.querySelector('.yt-close').addEventListener('click',close);
   document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&ov.classList.contains('open')) close(); });
   document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement&&ov.classList.contains('open')) close(); });
+})();
+</script>
+<script id="navTopJs">
+// Clicking the name or the HRK logo in the nav scrolls back to the top of the page.
+(function(){
+  const dot = document.getElementById('cursorDot');
+  const targets = [document.getElementById('navName'), document.querySelector('.nav-hrk')].filter(Boolean);
+  function toTop(e){
+    if(e) e.preventDefault();
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  targets.forEach(el => {
+    el.addEventListener('click', toTop);
+    el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') toTop(e); });
+    if(dot){
+      el.addEventListener('mouseenter', () => dot.classList.add('big'));
+      el.addEventListener('mouseleave', () => dot.classList.remove('big'));
+    }
+  });
 })();
 </script>
 </body>
